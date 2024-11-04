@@ -1,3 +1,4 @@
+import copy
 import hashlib
 import json
 import logging
@@ -20,6 +21,13 @@ with open(os.getenv('USERS_FILE_PATH', '../test-data/passwd.json')) as fp:
         USERS = json.load(fp)
     except Exception:
         logging.error(f'Failed to load passwords file')
+        raise
+
+with open(os.getenv('HOSTS_FILE_PATH', '../test-data/hosts-data.json')) as fp:
+    try:
+        HOSTS = json.load(fp)
+    except Exception:
+        logging.error(f'Failed to load hosts file')
         raise
 
 is_dev = os.getenv('MODE_DEV') == '1',
@@ -69,7 +77,7 @@ def load_user(user_id):
     return user
 
 
-@app.route('/')
+@app.route('/', methods=('GET', 'POST'))
 def index():
     form = LoginForm()
     if form.validate_on_submit():
@@ -105,8 +113,22 @@ def index():
         user.id = name
         flask_login.login_user(user, duration=timedelta(seconds=LOGIN_DURATION), remember=False)
 
-        next_url = flask.request.args.get('next', '/')
-        return flask.redirect(next_url)
+        data = {'data': []}
+        for host_data in HOSTS:
+            host_data_copy = copy.deepcopy(host_data)
+
+            host_name = host_data_copy.get('hostname')
+            if not host_name:
+                continue
+            host_data_copy.setdefault('active', True)
+            host_data_copy.setdefault('title', host_name)
+            host_data_copy.setdefault('type', 'https')
+            host_data_copy.setdefault('port', '443')
+            host_data_copy['username'] = form.name.data
+            host_data_copy['password'] = form.password.data
+
+            data['data'].append(host_data_copy)
+            return flask.render_template('config.html', conf=json.dumps(data, indent=2))
 
     return flask.render_template('login.html', form=form)
 

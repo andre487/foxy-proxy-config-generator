@@ -1,0 +1,32 @@
+[
+  {
+    "active": true,
+    "title": "Proxy1",
+    "type": "https",
+    "hostname": "proxy1.example.com",
+    "port": "443",
+    "cc": "RU",
+    "city": "Moscow",
+    "color": "#b9c6f6",
+    "pac": "",
+    "pacString": "",
+    "proxyDNS": true,
+    "include": [],
+    "exclude": []
+  },
+  {
+    "active": true,
+    "title": "Proxy2",
+    "type": "https",
+    "hostname": "proxy2.example.com",
+    "port": "443",
+    "cc": "AM",
+    "city": "Erevan",
+    "color": "#eef209",
+    "pac": "",
+    "pacString": "",
+    "proxyDNS": true,
+    "include": [],
+    "exclude": []
+  }
+]
