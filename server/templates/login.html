@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<title>Login</title>
+<form method="POST">
+    {{ form.csrf_token }}
+    {{ form.name.label}}
+    {{ form.name}}
+    {{ form.password.label}}
+    {{ form.password}}
+    <input type="submit" value="Login">
+</form>
